@@ -15,6 +15,7 @@
 
 @property(nonatomic, retain) UITableView *tableView;
 @property(nonatomic, retain) UILayoutGuide *safeArea;
+@property(nonatomic, nullable) NSArray *devices;
 
 @end
 
@@ -30,6 +31,17 @@
     self.safeArea = self.view.layoutMarginsGuide;
     self.view.backgroundColor = [UIColor whiteColor];
     [self setupTableView];
+    [self fetchData];
+}
+
+- (void)fetchData {
+    [[CoreDataController sharedCache] getAllDevices:^(BOOL completed, BOOL success, NSArray * _Nonnull objects) {
+        self.devices = objects;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
+    }];
 }
 
 - (void)setupTableView {
@@ -50,15 +62,21 @@
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     UITableViewCell *cell  = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
-    cell.textLabel.text = @"data";
+    
+    id object = [self.devices objectAtIndex: indexPath.row];
+    if ([object isKindOfClass: [Device self]]) {
+        Device *device = object;
+        cell.textLabel.text = device.name;
+    }
+    
     return cell;
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10;
+    return self.devices.count;
 }
 
-#pragma mark UITableView Delegate 
+#pragma mark UITableView Delegate
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     DetailViewController *dc = [DetailViewController new];
