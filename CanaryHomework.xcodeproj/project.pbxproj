@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		97DDF3652497C21200F1D7CF /* DetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 97DDF3642497C21200F1D7CF /* DetailView.m */; };
 		B21CD53D233A9181006994CA /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = B21CD46E233A9180006994CA /* AFURLResponseSerialization.m */; };
 		B21CD53E233A9181006994CA /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B21CD46F233A9180006994CA /* AFHTTPSessionManager.m */; };
 		B21CD53F233A9181006994CA /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B21CD471233A9180006994CA /* AFURLSessionManager.m */; };
@@ -33,6 +34,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		97DDF3642497C21200F1D7CF /* DetailView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailView.m; sourceTree = "<group>"; };
+		97DDF3662497C21C00F1D7CF /* DetailView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailView.h; sourceTree = "<group>"; };
 		B21CD46A233A9180006994CA /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFSecurityPolicy.h; sourceTree = "<group>"; };
 		B21CD46B233A9180006994CA /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
 		B21CD46C233A9180006994CA /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
@@ -220,6 +223,8 @@
 				B2E7093C2333FF39009B864F /* Assets.xcassets */,
 				B2E709412333FF39009B864F /* Info.plist */,
 				B2E709422333FF39009B864F /* main.m */,
+				97DDF3662497C21C00F1D7CF /* DetailView.h */,
+				97DDF3642497C21200F1D7CF /* DetailView.m */,
 			);
 			path = CanaryHomework;
 			sourceTree = "<group>";
@@ -321,6 +326,7 @@
 				B2E7095623341732009B864F /* Device+CoreDataClass.m in Sources */,
 				B21CD541233A9181006994CA /* AFNetworkReachabilityManager.m in Sources */,
 				B28912C6233B9ACC00F0C3C5 /* Device+ParserLogic.m in Sources */,
+				97DDF3652497C21200F1D7CF /* DetailView.m in Sources */,
 				B2E709322333FF38009B864F /* AppDelegate.m in Sources */,
 				B21CD540233A9181006994CA /* AFURLRequestSerialization.m in Sources */,
 				B21CD53F233A9181006994CA /* AFURLSessionManager.m in Sources */,
