@@ -9,17 +9,17 @@
 #import "ViewController.h"
 #import "DetailViewController.h"
 #import "CoreDataController.h"
+#import "CoreDataManager.h"
 #import "Device+CoreDataProperties.h"
 
-@interface ViewController ()
+@interface ViewController () <NSFetchedResultsControllerDelegate>
 
 @property(nonatomic, retain) UITableView *tableView;
 @property(nonatomic, retain) UILayoutGuide *safeArea;
-@property(nonatomic, nullable) NSArray *devices;
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
+
 
 @end
-
-
 
 @implementation ViewController
 
@@ -31,17 +31,8 @@
     self.safeArea = self.view.layoutMarginsGuide;
     self.view.backgroundColor = [UIColor whiteColor];
     [self setupTableView];
+    [self initializeFetchedResultsController];
     [self fetchData];
-}
-
-- (void)fetchData {
-    [[CoreDataController sharedCache] getAllDevices:^(BOOL completed, BOOL success, NSArray * _Nonnull objects) {
-        self.devices = objects;
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
-    }];
 }
 
 - (void)setupTableView {
@@ -58,29 +49,65 @@
     self.tableView.delegate = self;
 }
 
+- (void)initializeFetchedResultsController
+{
+    NSFetchRequest *request = Device.fetchRequest;
+    NSSortDescriptor *deviceSort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    [request setSortDescriptors:@[deviceSort]];
+    
+    NSManagedObjectContext *managedContext = [CoreDataManager defaultManager].managedObjectContext;
+ 
+    [self setFetchedResultsController:[[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:managedContext sectionNameKeyPath:nil cacheName:nil]];
+    [[self fetchedResultsController] setDelegate:self];
+ 
+    NSError *error = nil;
+    if (![[self fetchedResultsController] performFetch:&error]) {
+        NSLog(@"Failed to initialize FetchedResultsController: %@\n%@", [error localizedDescription], [error userInfo]);
+        abort();
+    }
+}
+
+- (void)fetchData {
+    __weak typeof(self) weakSelf = self;
+    [[CoreDataController sharedCache] getAllDevices:^(BOOL completed, BOOL success, NSArray * _Nonnull objects) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.tableView reloadData];
+        });
+    }];
+}
+
 #pragma mark - UITableView Data Source
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     UITableViewCell *cell  = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     
-    id object = [self.devices objectAtIndex: indexPath.row];
-    if ([object isKindOfClass: [Device self]]) {
-        Device *device = object;
-        cell.textLabel.text = device.name;
-    }
-    
+    Device *device = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = device.name;
     return cell;
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.devices.count;
+
+    id< NSFetchedResultsSectionInfo> sectionInfo = [[self fetchedResultsController] sections][section];
+    return [sectionInfo numberOfObjects];
 }
 
 #pragma mark UITableView Delegate
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    DetailViewController *dc = [DetailViewController new];
+    
+    Device *device = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    DetailViewController *dc = [[DetailViewController alloc] initWithDevice:device];
+    
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     [self.navigationController pushViewController:dc animated:YES];
+}
+
+#pragma mark NSFetchedResultsControllerDelegate
+
+-(void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+    [self.tableView reloadData];
 }
 
 @end
