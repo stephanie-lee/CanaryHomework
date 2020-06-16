@@ -8,6 +8,10 @@
 
 @import UIKit;
 
+@class DetailViewModel;
+
 @interface DetailView : UIView
+
+- (void)configureWithViewModel:(DetailViewModel *)viewModel;
 
 @end

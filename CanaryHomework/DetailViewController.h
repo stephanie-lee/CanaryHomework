@@ -9,9 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "DetailView.h"
 
+@class Device;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DetailViewController : UIViewController
+
+- (nonnull instancetype)initWithDevice:(nonnull Device *)device NS_DESIGNATED_INITIALIZER;
+
+- (nonnull instancetype)init __attribute__((unavailable("use initWithDevice:")));
+- (nonnull instancetype)new __attribute__((unavailable("use initWithDevice:")));
 
 @end
 

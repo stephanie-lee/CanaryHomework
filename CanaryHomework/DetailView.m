@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "DetailView.h"
 
+#import "DetailViewModel.h"
+
 static const CGFloat kPadding = 50.0f;
 
 @interface DetailView ()
@@ -32,15 +34,18 @@ static const CGFloat kPadding = 50.0f;
         [self addSubview:self.maxLabel];
         [self addSubview:self.minLabel];
         [self addSubview:self.averageLabel];
-        
-        // TODO: test content, pass in viewModel instead
-        self.nameLabel.text = @"Name";
-        self.maxLabel.text = @"Max";
-        self.minLabel.text = @"Min";
-        self.averageLabel.text = @"Average";
     }
     
     return self;
+}
+
+#pragma mark - ViewModel
+
+- (void)configureWithViewModel:(DetailViewModel *)viewModel {
+    self.nameLabel.text = viewModel.nameText;
+    self.maxLabel.text = viewModel.maxText;
+    self.minLabel.text = viewModel.minText;
+    self.averageLabel.text = viewModel.averageText;
 }
 
 #pragma mark - Layout & Constraints

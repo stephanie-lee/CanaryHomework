@@ -88,7 +88,9 @@
                     return [Reading readingFromDictionary:dictionary forDevice:deviceID managedObjectContext:insertContext];
 
                 } completionBlock:^(NSArray *objects, NSError *error) {
-                    
+                    if (completionBlock != nil){
+                        completionBlock(YES, YES, objects);
+                    }
                 }];
             }
         }];
